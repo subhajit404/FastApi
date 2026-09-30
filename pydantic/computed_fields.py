@@ -1,4 +1,4 @@
-from pydantic import BaseModel,EmailStr, AnyUrl,Field,field_validator,model_validator
+from pydantic import BaseModel,EmailStr, AnyUrl,Field,field_validator,model_validator,computed_field
 from typing import List, Dict,Optional, Annotated
 
 
@@ -8,6 +8,7 @@ class Patient(BaseModel):
     email : EmailStr
     Linkedin : AnyUrl
     weight : float =Field(gt=0)
+    height : float = Field(gt = 0)
     marred : Optional[bool] = None
     allergy : Optional[List[str]] = Field(default=None,max_length=5) 
     phone : Dict[str,str]
@@ -30,13 +31,21 @@ class Patient(BaseModel):
 
         return self
     
+    @computed_field
+    @property
+    def bmi(self) -> float:
+        bmi = round(self.weight/(self.height**2),2)
+        return bmi
+        
+    
 def insert_paitent_details(patient:Patient):
     print(patient.name)
     print(patient.age)
     print(patient.allergy)
+    print(patient.bmi)
     print("Inserted")
 
-paitent_info = {'name':"Subhajit", 'age':62, 'email':'Abc@hdfc.com', 'Linkedin':"https://www.linkedin.com/in/subhajit-patra101/?isSelfProfile=true",'weight':68.5,'marred':False, 'allergy':['flower','Dust','water'], 'phone':{'phone_no':'7418529630', 'emergency':'7451852'}} 
+paitent_info = {'name':"Subhajit", 'age':62, 'email':'Abc@hdfc.com', 'Linkedin':"https://www.linkedin.com/in/subhajit-patra101/?isSelfProfile=true",'weight':68.5,'height':1.8,'marred':False, 'allergy':['flower','Dust','water'], 'phone':{'phone_no':'7418529630', 'emergency':'7451852'}} 
 
 Patient1 = Patient(**paitent_info)
 
