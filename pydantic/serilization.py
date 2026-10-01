@@ -29,4 +29,5 @@ print(temp)
 print(temp1)
 
 
+
 # exclude_unset is a function where if we don't get any value for suppose city then default value is also not print 
